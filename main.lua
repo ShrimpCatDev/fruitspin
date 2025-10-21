@@ -123,6 +123,7 @@ function love.update(dt)
     if time>=0.4 then
         if not checkBlockFall() then
             rmvBlocks()
+            map[1][math.random(1,10)]=math.random(1,3)
         end
         fallBlocks()
         
