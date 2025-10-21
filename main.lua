@@ -24,9 +24,9 @@ function love.load()
         local quad=love.graphics.newQuad(x*8,0,8,8,img:getWidth(),img:getHeight())
         table.insert(quads,quad)
     end
-    map[1][1]=1
+    --[[map[1][1]=1
     map[1][10]=2
-    map[10][10]=3
+    map[8][10]=3]]
 
     for x=1,10 do
         for y=1,10 do
@@ -35,6 +35,15 @@ function love.load()
             end
         end
     end
+
+    --[[for i=1,3 do
+        for j=1,3 do
+            local x,y=math.random(1,10),math.random(1,10)
+            if map[y][x]==0 then
+                map[y][x]=i
+            end
+        end
+    end]]
 
     time=0
 end
@@ -46,9 +55,64 @@ function fallBlocks()
                 local tile=map[y][x]
                 map[y][x]=0
                 map[y+1][x]=tile
+
+                local oTile=map[y+1][x]
             end
         end
     end
+end
+
+function rmvBlocks()
+    for y=#map,1,-1 do
+        for x=1,#map[y] do
+            local oTile=map[y][x]
+            if oTile~=0 then
+
+                --y <;3
+                local num=1
+
+                local yy = y
+
+                while yy<#map and map[yy+1][x]==oTile do
+                    yy=yy+1
+                    num=num+1
+                end
+
+                if num>=3 then
+                    for i=y,y+num-1 do
+                        map[i][x]=0
+                    end
+                end
+                
+                --x >:3zx
+                local num=1
+
+                local xx = x
+
+                while xx<#map[y] and map[y][xx+1]==oTile do
+                    xx=xx+1
+                    num=num+1
+                end
+
+                if num>=3 then
+                    for i=x,x+num-1 do
+                        map[y][i]=0
+                    end
+                end
+            end
+        end
+    end
+end
+
+function checkBlockFall()
+    for y=#map,1,-1 do
+        for x=1,#map[y] do
+            if (map[y][x]~=0 and y<#map) and (map[y+1] and map[y+1][x]==0) then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 function love.update(dt)
@@ -56,8 +120,12 @@ function love.update(dt)
 
     time=time+dt
 
-    if time>=0.2 then
+    if time>=0.4 then
+        if not checkBlockFall() then
+            rmvBlocks()
+        end
         fallBlocks()
+        
         time=0
     end
 end 
@@ -77,6 +145,7 @@ function love.draw()
             end
         shove.endLayer()
     shove.endDraw()
+    lg.print(tostring(checkBlockFall()))
 end
 
 function love.keypressed(k)
