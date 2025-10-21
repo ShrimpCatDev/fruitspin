@@ -24,17 +24,19 @@ function love.load()
         local quad=love.graphics.newQuad(x*8,0,8,8,img:getWidth(),img:getHeight())
         table.insert(quads,quad)
     end
-    --[[map[1][1]=1
-    map[1][10]=2
-    map[8][10]=3]]
+    map[1][1]=1
+    map[2][1]=1
+    map[3][1]=1
+    map[4][1]=1
 
-    for x=1,10 do
+
+    --[[for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
                 map[y][x]=math.random(1,3)
             end
         end
-    end
+    end]]
 
     --[[for i=1,3 do
         for j=1,3 do
@@ -78,8 +80,8 @@ function rmvBlocks()
                     num=num+1
                 end
 
-                if num>=3 then
-                    for i=y,y+num-1 do
+                if num>2 then
+                    for i=y-1,y+num-1 do
                         map[i][x]=0
                     end
                 end
@@ -94,8 +96,8 @@ function rmvBlocks()
                     num=num+1
                 end
 
-                if num>=3 then
-                    for i=x,x+num-1 do
+                if num>2 then
+                    for i=x-1,x+num-1 do
                         map[y][i]=0
                     end
                 end
