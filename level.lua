@@ -31,7 +31,7 @@ local function rmvBlocks(map)
                 end
 
                 if num>2 then
-                    for i=y-1,y+num-1 do
+                    for i=y,y+num-1 do
                         map[i][x]=0
                     end
                 end
@@ -47,7 +47,7 @@ local function rmvBlocks(map)
                 end
 
                 if num>2 then
-                    for i=x-1,x+num-1 do
+                    for i=x,x+num-1 do
                         map[y][i]=0
                     end
                 end
@@ -91,6 +91,14 @@ function lvl:enter()
 end
 
 function lvl:update(dt)
+
+    if input:pressed("rotateRight") then
+        self.map=rotate.rotate(self.map,1)
+    end
+    if input:pressed("rotateLeft") then
+        self.map=rotate.rotate(self.map,3)
+    end
+
     self.time=self.time+dt
 
     if self.time>=0.25 then

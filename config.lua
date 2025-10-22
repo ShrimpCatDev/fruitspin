@@ -13,7 +13,8 @@ conf.vsync=true
 
 conf.input={
     controls={
-
+        rotateLeft={"key:left","key:a"},
+        rotateRight={"key:right","key:d"}
     },
     pairs={
 
