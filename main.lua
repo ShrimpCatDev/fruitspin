@@ -40,10 +40,5 @@ function love.draw()
 end
 
 function love.keypressed(k)
-    if k=="right" then
-        map=rotate.rotate(map,1)
-    end
-    if k=="left" then
-        map=rotate.rotate(map,3)
-    end
+
 end
