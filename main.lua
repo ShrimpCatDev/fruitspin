@@ -16,6 +16,8 @@ end
 
 function love.load()
 
+    timer=require("lib.hump.timer")
+
     gs=require("lib.hump.gamestate")
     gs.registerEvents()
 
