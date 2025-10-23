@@ -20,7 +20,7 @@ local function rmvBlocks(map)
             local oTile=map[y][x]
             if oTile~=0 then
                 --y <;3
-                local num=1
+                local num=0
 
                 local yy = y
 
@@ -30,16 +30,16 @@ local function rmvBlocks(map)
                 end
 
                 if num>2 then
-                    for i=y,y+num-1 do
+                    for i=y,y+num do
                         map[i][x]=0
                     end
                 end
             end
-            
+
             local oTile=map[y][x]
             if oTile~=0 then
                 --x >:3
-                local num=1
+                local num=0
 
                 local xx = x
 
@@ -49,7 +49,7 @@ local function rmvBlocks(map)
                 end
 
                 if num>2 then
-                    for i=x,x+num-1 do
+                    for i=x,x+num do
                         map[y][i]=0
                     end
                 end
@@ -87,13 +87,22 @@ function lvl:enter()
     self.time=0
     self.map=generateMap(10,10,0)
 
-    for x=1,10 do
+    self.map[1][1]=1
+    self.map[2][1]=1
+    self.map[3][1]=1
+    self.map[4][1]=1
+    self.map[1][2]=2
+    self.map[1][3]=2
+    self.map[1][4]=2
+    self.map[1][5]=2
+
+    --[[for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
-    end
+    end]]
 end
 
 function lvl:rotateBoard(dir)
