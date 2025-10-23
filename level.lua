@@ -68,7 +68,8 @@ local function checkBlockFall(map)
 end
 
 function lvl:init()
-    self.screen={img=lg.newCanvas(80,80),x=conf.gW/2,y=conf.gH/2,w=80,h=80,r=0}
+    self.deg=math.rad(90)
+    self.screen={img=lg.newCanvas(80,80),x=conf.gW/2,y=conf.gH/2,w=80,h=80,r=0,canRotate=true}
 
     self.patternRotate=1
     self.bricks={lg.newImage("assets/brick1.png"),lg.newImage("assets/brick2.png")}
@@ -93,6 +94,16 @@ function lvl:enter()
     end
 end
 
+function lvl:rotateBoard(dir)
+    if self.screen.canRotate then
+        self.screen.canRotate=false
+        self.screen.r=1.5708*dir
+        timer.tween(0.2,self.screen,{r=0},"out-cubic",function()
+            self.screen.canRotate=true
+        end)
+    end
+end
+
 function lvl:update(dt)
 
     timer.update(dt)
@@ -100,10 +111,12 @@ function lvl:update(dt)
     if input:pressed("rotateRight") then
         self.map=rotate.rotate(self.map,1)
         self.patternRotate=self.patternRotate+1
+        self:rotateBoard(-1)
     end
     if input:pressed("rotateLeft") then
         self.map=rotate.rotate(self.map,3)
         self.patternRotate=self.patternRotate-1
+        self:rotateBoard(1)
     end
     if self.patternRotate<0 then
         self.patternRotate=1
