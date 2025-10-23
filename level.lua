@@ -29,7 +29,7 @@ local function rmvBlocks(map)
                     num=num+1
                 end
 
-                if num>2 then
+                if num>1 then
                     for i=y,y+num do
                         map[i][x]=0
                     end
@@ -48,7 +48,7 @@ local function rmvBlocks(map)
                     num=num+1
                 end
 
-                if num>2 then
+                if num>1 then
                     for i=x,x+num do
                         map[y][i]=0
                     end
