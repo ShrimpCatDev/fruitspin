@@ -68,6 +68,9 @@ local function checkBlockFall(map)
 end
 
 function lvl:init()
+    self.screen={img=lg.newCanvas(80,80),x=0,y=0,w=80,h=80,r=0}
+
+    self.patternRotate=1
     self.bricks={lg.newImage("assets/brick1.png"),lg.newImage("assets/brick2.png")}
     self.fruitImg=lg.newImage("assets/fruit.png")
     self.fruitQuads={}
@@ -94,9 +97,16 @@ function lvl:update(dt)
 
     if input:pressed("rotateRight") then
         self.map=rotate.rotate(self.map,1)
+        self.patternRotate=self.patternRotate+1
     end
     if input:pressed("rotateLeft") then
         self.map=rotate.rotate(self.map,3)
+        self.patternRotate=self.patternRotate-1
+    end
+    if self.patternRotate<0 then
+        self.patternRotate=1
+    elseif self.patternRotate>1 then
+        self.patternRotate=0
     end
 
     self.time=self.time+dt
@@ -113,24 +123,28 @@ function lvl:update(dt)
 end
 
 function lvl:draw()
+    lg.setCanvas(self.screen.img)
+        for x=0,9 do
+            for y=0,9 do
+                if (x+y)%2==self.patternRotate then
+                    lg.draw(self.bricks[1],x*8,y*8)
+                else
+                    lg.draw(self.bricks[2],x*8,y*8)
+                end
+            end
+        end
+        for y,v in ipairs(self.map) do
+            for x,j in ipairs(v) do
+                if j~=0 then
+                    lg.draw(self.fruitImg,self.fruitQuads[j],(x-1)*8,(y-1)*8)
+                end
+            end
+        end
+    lg.setCanvas()
+
     shove.beginDraw()
         shove.beginLayer("game")
-            for x=0,9 do
-                for y=0,9 do
-                    if (x+y)%2==1 then
-                        lg.draw(self.bricks[1],x*8,y*8)
-                    else
-                        lg.draw(self.bricks[2],x*8,y*8)
-                    end
-                end
-            end
-            for y,v in ipairs(self.map) do
-                for x,j in ipairs(v) do
-                    if j~=0 then
-                        lg.draw(self.fruitImg,self.fruitQuads[j],(x-1)*8,(y-1)*8)
-                    end
-                end
-            end
+            lg.draw(self.screen.img)
         shove.endLayer()
     shove.endDraw()
 end
