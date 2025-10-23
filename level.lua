@@ -19,7 +19,6 @@ local function rmvBlocks(map)
         for x=1,#map[y] do
             local oTile=map[y][x]
             if oTile~=0 then
-
                 --y <;3
                 local num=1
 
@@ -35,8 +34,11 @@ local function rmvBlocks(map)
                         map[i][x]=0
                     end
                 end
-                
-                --x >:3zx
+            end
+            
+            local oTile=map[y][x]
+            if oTile~=0 then
+                --x >:3
                 local num=1
 
                 local xx = x
