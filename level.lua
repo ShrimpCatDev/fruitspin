@@ -87,22 +87,22 @@ function lvl:enter()
     self.time=0
     self.map=generateMap(10,10,0)
 
-    self.map[1][1]=1
+    --[[self.map[1][1]=1
     self.map[2][1]=1
     self.map[3][1]=1
     self.map[4][1]=1
     self.map[1][2]=2
     self.map[1][3]=2
     self.map[1][4]=2
-    self.map[1][5]=2
+    self.map[1][5]=2]]
 
-    --[[for x=1,10 do
+    for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
-    end]]
+    end
 end
 
 function lvl:rotateBoard(dir)
