@@ -30,7 +30,7 @@ local function rmvBlocks(map)
                 end
 
                 if num>1 then
-                    for i=y,y+num do
+                    for i=y-1,yy do
                         map[i][x]=0
                     end
                 end
@@ -87,29 +87,30 @@ function lvl:enter()
     self.time=0
     self.map=generateMap(10,10,0)
 
-    --[[self.map[1][1]=1
+    self.map[1][1]=3
+    self.map[5][1]=1
     self.map[2][1]=1
     self.map[3][1]=1
     self.map[4][1]=1
     self.map[1][2]=2
     self.map[1][3]=2
     self.map[1][4]=2
-    self.map[1][5]=2]]
+    self.map[1][5]=2
 
-    for x=1,10 do
+    --[[for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
-    end
+    end]]
 end
 
 function lvl:rotateBoard(dir)
     if self.screen.canRotate then
         self.screen.canRotate=false
         self.screen.r=1.5708*dir
-        timer.tween(0.2,self.screen,{r=0},"out-cubic",function()
+        timer.tween(0.15,self.screen,{r=0},"out-cubic",function()
             self.screen.canRotate=true
         end)
     end
@@ -119,12 +120,12 @@ function lvl:update(dt)
 
     timer.update(dt)
 
-    if input:pressed("rotateRight") then
+    if input:pressed("rotateRight") and self.screen.canRotate then
         self.map=rotate.rotate(self.map,1)
         self.patternRotate=self.patternRotate+1
         self:rotateBoard(-1)
     end
-    if input:pressed("rotateLeft") then
+    if input:pressed("rotateLeft") and self.screen.canRotate then
         self.map=rotate.rotate(self.map,3)
         self.patternRotate=self.patternRotate-1
         self:rotateBoard(1)
@@ -137,7 +138,7 @@ function lvl:update(dt)
 
     self.time=self.time+dt
 
-    if self.time>=0.25 then
+    if self.time>=0.1 then
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
             self.map[1][math.random(1,10)]=math.random(1,4)
