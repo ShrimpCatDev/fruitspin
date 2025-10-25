@@ -161,10 +161,10 @@ function lvl:update(dt)
 
     local rmv={}
 
-    for k,b in ipairs(self.fall) do
+    --[[for k,b in ipairs(self.fall) do
         b.y=b.y+self.fallSpeed*dt
         local ty=math.floor((b.y)/8)-2
-        if ty>0 and ((ty+1<=10 and self.map[ty+1][b.x]~=0) or ty==10) then
+        if ty>0 and ((ty+1<=10 and self.map[ty+1][b.x]~=0) or ty==10) and self.map[ty][b.x]==0 then
             self.map[ty][b.x]=b.kind
             table.insert(rmv,k)
         end
@@ -173,7 +173,7 @@ function lvl:update(dt)
 
     for i=#rmv,1,-1 do
         table.remove(self.fall,rmv[i])
-    end
+    end]]
 
     self.particles.update(dt)
     timer.update(dt)
@@ -198,16 +198,21 @@ function lvl:update(dt)
     self.time=self.time+dt
 
     if self.time>=0.15 then
-        if not checkBlockFall(self.map) then
-            rmvBlocks(self.map)
-            --self.map[1][math.random(1,10)]=math.random(1,4)
-            if #self.fall<=0 then
-                self:newBlock(math.random(1,10),math.random(1,4))
-            end
-        end
         fallBlocks(self.map)
         
         self.time=0
+
+        if not checkBlockFall(self.map) then
+            rmvBlocks(self.map)
+            local x=math.random(1,10)
+            while self.map[1][x]~=0 do
+                x=math.random(1,10)
+            end
+            self.map[1][x]=math.random(1,4)
+            --[[if #self.fall<=0 then
+                self:newBlock(math.random(1,10),math.random(1,4))
+            end]]
+        end
     end
 end
 
