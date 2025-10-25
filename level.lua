@@ -41,7 +41,7 @@ local function rmvBlocks(map)
                         function() end,
                         {tile=map[i+1][x]})
                     end
-                    for i=y-1,yy do
+                    for i=y,yy do
                         map[i][x]=0
                     end
                     return
@@ -127,9 +127,10 @@ function lvl:enter()
     self.map=generateMap(10,10,0)
 
     --debug uwuness
-    --[[self.map[1][1]=3
+    --[[self.map[1][1]=1
     self.map[2][1]=3
-    self.map[3][1]=3]]
+    self.map[3][1]=3
+    self.map[4][1]=3]]
     for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
