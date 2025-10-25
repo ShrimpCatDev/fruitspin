@@ -27,9 +27,18 @@ function love.load()
     
     math.randomseed(love.math.random(0,845261654))
     rotate=require("lib.rotate")
+
+    local lutEffect=love.graphics.newShader("shaders/lut.glsl")
+    pal=lg.newImage("assets/lut.png")
+    pal:setFilter("nearest","nearest")
+    lutEffect:send("lut",pal)
+
+    shove.addGlobalEffect(lutEffect)
     shove.createLayer("game")
 
     gs.switch(state["level"])
+
+    
 
 end
 

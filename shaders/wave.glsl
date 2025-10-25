@@ -9,5 +9,5 @@ vec4 effect(vec4 color, Image texture,vec2 tCoords,vec2 sCoords){
 
     vec2 dist = vec2(tCoords.x+waveX,tCoords.y);
 
-    return Texel(texture,dist)*vec4(0.2,0.8,1,1);
+    return Texel(texture,dist)*vec4(0.3,0.4,0.8,1);
 }
