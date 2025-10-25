@@ -49,7 +49,7 @@ local function rmvBlocks(map)
                 end
 
                 if num>1 then
-                    for i=x,x+num do
+                    for i=x,xx do
                         map[y][i]=0
                     end
                 end
@@ -84,26 +84,29 @@ function lvl:init()
 end
 
 function lvl:enter()
+    self.bg=require("bgs/bg1")
+    self.bg:init()
+
     self.time=0
     self.map=generateMap(10,10,0)
 
-    self.map[1][1]=3
+    --[[self.map[1][1]=3
     self.map[5][1]=1
     self.map[2][1]=1
     self.map[3][1]=1
-    self.map[4][1]=1
+    self.map[4][1]=3
     self.map[1][2]=2
     self.map[1][3]=2
     self.map[1][4]=2
-    self.map[1][5]=2
+    self.map[1][5]=4]]
 
-    --[[for x=1,10 do
+    for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
-    end]]
+    end
 end
 
 function lvl:rotateBoard(dir)
@@ -117,8 +120,8 @@ function lvl:rotateBoard(dir)
 end
 
 function lvl:update(dt)
-
     timer.update(dt)
+    self.bg:update(dt)
 
     if input:pressed("rotateRight") and self.screen.canRotate then
         self.map=rotate.rotate(self.map,1)
@@ -138,7 +141,7 @@ function lvl:update(dt)
 
     self.time=self.time+dt
 
-    if self.time>=0.1 then
+    if self.time>=0.15 then
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
             self.map[1][math.random(1,10)]=math.random(1,4)
@@ -171,6 +174,7 @@ function lvl:draw()
 
     shove.beginDraw()
         shove.beginLayer("game")
+            self.bg:draw()
             local s=self.screen
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
         shove.endLayer()
