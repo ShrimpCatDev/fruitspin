@@ -30,6 +30,17 @@ local function rmvBlocks(map)
                 end
 
                 if num>1 then
+                    for i=y-1,yy-1 do
+                        local xx=lvl.screen.x-lvl.screen.w/2
+                        local yy=lvl.screen.y-lvl.screen.y/2
+                        
+                        lvl.particles.new(xx+((x-1)*8),yy+((i-1)*8),math.random(-10,10),-math.random(120,10),0,240,1,
+                        function(x1,y1,lt,data)
+                            lg.draw(lvl.fruitImg,lvl.fruitQuads[data.tile],x1+4,y1+4,-lt*8,1,1,4,4)
+                        end,
+                        function() end,
+                        {tile=map[i+1][x]})
+                    end
                     for i=y-1,yy do
                         map[i][x]=0
                     end
@@ -51,8 +62,21 @@ local function rmvBlocks(map)
 
                 if num>1 then
                     for i=x,xx do
+                        local xx=lvl.screen.x-lvl.screen.w/2
+                        local yy=lvl.screen.y-lvl.screen.y/2
+                        
+                        lvl.particles.new(xx+((i-1)*8),yy+((y-2)*8),math.random(-10,10),-math.random(120,10),0,240,1,
+                        function(x1,y1,lt,data)
+                            lg.draw(lvl.fruitImg,lvl.fruitQuads[data.tile],x1+4,y1+4,-lt*8,1,1,4,4)
+                        end,
+                        function() end,
+                        {tile=map[y][i]})
+                    end
+
+                    for i=x,xx do
                         map[y][i]=0
                     end
+
                     return
                 end
             end
@@ -72,6 +96,8 @@ local function checkBlockFall(map)
 end
 
 function lvl:init()
+    self.particles=require("lib.particles")
+
     self.deg=math.rad(90)
     self.screen={img=lg.newCanvas(80,80),x=conf.gW/2,y=conf.gH/2,w=80,h=80,r=0,canRotate=true}
 
@@ -91,7 +117,7 @@ local function rrect(x,y,w,h)
 end
 
 function lvl:enter()
-
+    self.particles.clear()
     self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=conf.gH-16,w=28,h=10}
 
     self.bg=require("bgs/bg1")
@@ -102,15 +128,8 @@ function lvl:enter()
 
     --debug uwuness
     --[[self.map[1][1]=3
-    self.map[5][1]=1
-    self.map[2][1]=1
-    self.map[3][1]=1
-    self.map[4][1]=3
-    self.map[1][2]=2
-    self.map[1][3]=2
-    self.map[1][4]=2
-    self.map[1][5]=4]]
-
+    self.map[2][1]=3
+    self.map[3][1]=3]]
     for x=1,10 do
         for y=1,10 do
             if math.random(0,10)==1 then
@@ -131,6 +150,7 @@ function lvl:rotateBoard(dir)
 end
 
 function lvl:update(dt)
+    self.particles.update(dt)
     timer.update(dt)
     self.bg:update(dt)
 
@@ -210,6 +230,8 @@ function lvl:draw()
 
             lg.setColor(1,1,1,1)
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
+
+            self.particles.draw()
 
             lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
 
