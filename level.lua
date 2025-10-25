@@ -33,6 +33,7 @@ local function rmvBlocks(map)
                     for i=y-1,yy do
                         map[i][x]=0
                     end
+                    return
                 end
             end
 
@@ -52,6 +53,7 @@ local function rmvBlocks(map)
                     for i=x,xx do
                         map[y][i]=0
                     end
+                    return
                 end
             end
         end
@@ -83,13 +85,22 @@ function lvl:init()
     end
 end
 
+local function rrect(x,y,w,h)
+    lg.rectangle("fill",x+1,y,w-2,h)
+    lg.rectangle("fill",x,y+1,w,h-2)
+end
+
 function lvl:enter()
+
+    self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=conf.gH-16,w=28,h=10}
+
     self.bg=require("bgs/bg1")
     self.bg:init()
 
     self.time=0
     self.map=generateMap(10,10,0)
 
+    --debug uwuness
     --[[self.map[1][1]=3
     self.map[5][1]=1
     self.map[2][1]=1
@@ -154,6 +165,15 @@ end
 
 function lvl:draw()
     self.bg:cDraw()
+
+    lg.setCanvas(self.next.img)
+
+        lg.setColor(color("#fdb193"))
+        rrect(0,1,self.next.w,self.next.h)
+        lg.setColor(color("#fff3ee"))
+        rrect(0,0,self.next.w,self.next.h)
+        lg.setColor(1,1,1,1)
+
     lg.setCanvas(self.screen.img)
         for x=0,9 do
             for y=0,9 do
@@ -180,6 +200,8 @@ function lvl:draw()
 
             local s=self.screen
 
+            lg.setColor(0,0,0,0.55)
+            lg.rectangle("fill",s.x-4-(s.w/2)+2,0,s.w+7,s.h+s.y-(s.w/2)+5)
             lg.setColor(color("#482a37"))
             lg.rectangle("fill",s.x-4-(s.w/2),0,s.w+8,s.h+s.y-(s.w/2)+3)
             lg.rectangle("fill",s.x-4-(s.w/2)+1,0,s.w+6,s.h+s.y-(s.w/2)+4)
@@ -188,6 +210,9 @@ function lvl:draw()
 
             lg.setColor(1,1,1,1)
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
+
+            lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
+
 
         shove.endLayer()
     shove.endDraw()
