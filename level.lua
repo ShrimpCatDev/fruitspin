@@ -153,6 +153,7 @@ function lvl:update(dt)
 end
 
 function lvl:draw()
+    self.bg:cDraw()
     lg.setCanvas(self.screen.img)
         for x=0,9 do
             for y=0,9 do
