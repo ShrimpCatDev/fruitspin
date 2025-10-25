@@ -125,7 +125,7 @@ function lvl:enter()
     self.fallSpeed=20
 
     self.particles.clear()
-    self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=conf.gH-16,w=28,h=10}
+    self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=6,w=28,h=10}
 
     self.bg=require("bgs/bg1")
     self.bg:init()
@@ -140,7 +140,7 @@ function lvl:enter()
     self.map[4][1]=3]]
     for x=1,10 do
         for y=1,10 do
-            if math.random(0,10)==1 then
+            if math.random(0,1)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
@@ -198,20 +198,26 @@ function lvl:update(dt)
     self.time=self.time+dt
 
     if self.time>=0.15 then
+
         fallBlocks(self.map)
+        --rmvBlocks(self.map)
         
         self.time=0
 
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
-            local x=math.random(1,10)
-            while self.map[1][x]~=0 do
-                x=math.random(1,10)
+            if not checkBlockFall(self.map) then
+                local x=math.random(1,10)
+                while self.map[1][x]~=0 do
+                    x=math.random(1,10)
+                end
+                self.map[1][x]=math.random(1,4)
             end
-            self.map[1][x]=math.random(1,4)
+            
             --[[if #self.fall<=0 then
                 self:newBlock(math.random(1,10),math.random(1,4))
             end]]
+            
         end
     end
 end
