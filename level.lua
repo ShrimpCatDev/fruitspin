@@ -174,9 +174,20 @@ function lvl:draw()
 
     shove.beginDraw()
         shove.beginLayer("game")
+
             self.bg:draw()
+
             local s=self.screen
+
+            lg.setColor(color("#482a37"))
+            lg.rectangle("fill",s.x-4-(s.w/2),0,s.w+8,s.h+s.y-(s.w/2)+3)
+            lg.rectangle("fill",s.x-4-(s.w/2)+1,0,s.w+6,s.h+s.y-(s.w/2)+4)
+            lg.setColor(color("#9a5854"))
+            lg.rectangle("fill",s.x-(s.w/2),0,s.w,s.h+s.y-(s.w/2))
+
+            lg.setColor(1,1,1,1)
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
+
         shove.endLayer()
     shove.endDraw()
 end
