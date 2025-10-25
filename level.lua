@@ -116,7 +116,14 @@ local function rrect(x,y,w,h)
     lg.rectangle("fill",x,y+1,w,h-2)
 end
 
+function lvl:newBlock(x,kind)
+    table.insert(self.fall,{x=x,y=-8,kind=kind})
+end
+
 function lvl:enter()
+    self.fall={}
+    self.fallSpeed=20
+
     self.particles.clear()
     self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=conf.gH-16,w=28,h=10}
 
@@ -151,6 +158,23 @@ function lvl:rotateBoard(dir)
 end
 
 function lvl:update(dt)
+
+    local rmv={}
+
+    for k,b in ipairs(self.fall) do
+        b.y=b.y+self.fallSpeed*dt
+        local ty=math.floor((b.y)/8)-2
+        if ty>0 and ((ty+1<=10 and self.map[ty+1][b.x]~=0) or ty==10) then
+            self.map[ty][b.x]=b.kind
+            table.insert(rmv,k)
+        end
+        
+    end
+
+    for i=#rmv,1,-1 do
+        table.remove(self.fall,rmv[i])
+    end
+
     self.particles.update(dt)
     timer.update(dt)
     self.bg:update(dt)
@@ -176,7 +200,10 @@ function lvl:update(dt)
     if self.time>=0.15 then
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
-            self.map[1][math.random(1,10)]=math.random(1,4)
+            --self.map[1][math.random(1,10)]=math.random(1,4)
+            if #self.fall<=0 then
+                self:newBlock(math.random(1,10),math.random(1,4))
+            end
         end
         fallBlocks(self.map)
         
@@ -212,6 +239,7 @@ function lvl:draw()
                 end
             end
         end
+        
     lg.setCanvas()
 
     shove.beginDraw()
@@ -231,6 +259,13 @@ function lvl:draw()
 
             lg.setColor(1,1,1,1)
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
+
+            for k,b in ipairs(self.fall) do
+                lg.draw(self.fruitImg,self.fruitQuads[b.kind],(b.x-1)*8 + self.screen.x-self.screen.w/2,b.y)
+
+                local yy=math.floor((b.y+8)/8)
+                --lg.rectangle("fill",(b.x-1)*8 + self.screen.x-self.screen.w/2,yy*8,8,8)
+            end
 
             self.particles.draw()
 
