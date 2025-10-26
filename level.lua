@@ -42,9 +42,10 @@ local function rmvBlocks(map)
                         function() end,
                         {tile=map[i+1][x]})
                     end
-                    for i=y,yy do
-                        
-                        map[i][x]=0
+                    for i=y-1,yy do
+                        if map[i][x]==oTile then
+                            map[i][x]=0
+                        end
                     end
                     return
                 end
@@ -77,7 +78,6 @@ local function rmvBlocks(map)
                     end
 
                     for i=x,xx do
-                        
                         map[y][i]=0
                     end
 
@@ -155,17 +155,19 @@ function lvl:enter()
     self.map=generateMap(10,10,0)
 
     --debug uwuness
-    --[[self.map[1][1]=1
+    self.map[1][1]=2
     self.map[2][1]=3
     self.map[3][1]=3
-    self.map[4][1]=3]]
-    for x=1,10 do
+    self.map[4][1]=3
+    self.map[5][1]=3
+    self.map[6][1]=2
+    --[[for x=1,10 do
         for y=1,10 do
             if math.random(0,1)==1 then
                 self.map[y][x]=math.random(1,4)
             end
         end
-    end
+    end]]
 end
 
 function lvl:rotateBoard(dir)
