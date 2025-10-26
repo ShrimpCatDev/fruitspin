@@ -31,6 +31,7 @@ local function rmvBlocks(map)
 
                 if num>1 then
                     for i=y-1,yy-1 do
+                        lvl:addScore(lvl.blockScore[map[i+1][x]])
                         local xx=lvl.screen.x-lvl.screen.w/2
                         local yy=lvl.screen.y-lvl.screen.y/2
                         
@@ -42,7 +43,7 @@ local function rmvBlocks(map)
                         {tile=map[i+1][x]})
                     end
                     for i=y,yy do
-                        lvl.score=lvl.score+lvl.blockScore[map[i][x]]
+                        
                         map[i][x]=0
                     end
                     return
@@ -63,6 +64,7 @@ local function rmvBlocks(map)
 
                 if num>1 then
                     for i=x,xx do
+                        lvl:addScore(lvl.blockScore[map[y][i]])
                         local xx=lvl.screen.x-lvl.screen.w/2
                         local yy=lvl.screen.y-lvl.screen.y/2
                         
@@ -75,7 +77,7 @@ local function rmvBlocks(map)
                     end
 
                     for i=x,xx do
-                        lvl.score=lvl.score+lvl.blockScore[map[y][i]]
+                        
                         map[y][i]=0
                     end
 
@@ -124,8 +126,20 @@ end
 
 lvl.blockScore={10,12,14,16}
 
+function lvl:addScore(s)
+    self.score=self.score+s
+    if self.stat.cr then
+        self.stat.cr=false
+        timer.tween(0.1,self.stat,{tr=math.random(-2,2)*0.1},"out-cubic",function()
+            timer.tween(0.1,self.stat,{tr=0},"in-cubic",function()
+                self.stat.cr=true
+            end)
+        end)
+   end
+end
+
 function lvl:enter()
-    self.stat={tr=0}
+    self.stat={tr=0,cr=true}
     self.score=0
     self.fall={}
     self.fallSpeed=20
@@ -230,11 +244,11 @@ function lvl:update(dt)
     end
 end
 
-local function sprint(t,x,y,a)
+local function sprint(t,x,y,a,r)
     lg.setColor(0,0,0,a)
-    cprint(t,x+1,y+1)
+    cprint(t,x+1,y+1,r)
     lg.setColor(1,1,1,1)
-    cprint(t,x,y)
+    cprint(t,x,y,r)
 end
 
 function lvl:draw()
@@ -297,7 +311,7 @@ function lvl:draw()
 
             lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
 
-            sprint("score: "..self.score,80,conf.gH-10,0.7)
+            sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
         shove.endLayer()
     shove.endDraw()
 end

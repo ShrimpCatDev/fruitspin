@@ -25,5 +25,5 @@ function rect(f,x,y,w,h)
 end
 
 function cprint(text,x,y,r)
-    lg.print(text,x-font:getWidth(text)/2,y-font:getHeight()/2,r or 0)
+    lg.print(text,x,y,r or 0,1,1,font:getWidth(text)/2,font:getHeight()/2)
 end
