@@ -42,6 +42,7 @@ local function rmvBlocks(map)
                         {tile=map[i+1][x]})
                     end
                     for i=y,yy do
+                        lvl.score=lvl.score+lvl.blockScore[map[i][x]]
                         map[i][x]=0
                     end
                     return
@@ -74,6 +75,7 @@ local function rmvBlocks(map)
                     end
 
                     for i=x,xx do
+                        lvl.score=lvl.score+lvl.blockScore[map[y][i]]
                         map[y][i]=0
                     end
 
@@ -120,7 +122,11 @@ function lvl:newBlock(x,kind)
     table.insert(self.fall,{x=x,y=-8,kind=kind})
 end
 
+lvl.blockScore={10,12,14,16}
+
 function lvl:enter()
+    self.stat={tr=0}
+    self.score=0
     self.fall={}
     self.fallSpeed=20
 
@@ -131,6 +137,7 @@ function lvl:enter()
     self.bg:init()
 
     self.time=0
+    self.maxTime=0.15
     self.map=generateMap(10,10,0)
 
     --debug uwuness
@@ -197,13 +204,7 @@ function lvl:update(dt)
 
     self.time=self.time+dt
 
-    if self.time>=0.15 then
-
-        fallBlocks(self.map)
-        --rmvBlocks(self.map)
-        
-        self.time=0
-
+    if self.time>=self.maxTime then
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
             if not checkBlockFall(self.map) then
@@ -219,7 +220,21 @@ function lvl:update(dt)
             end]]
             
         end
+
+        fallBlocks(self.map)
+        --rmvBlocks(self.map)
+        
+        self.time=0
+
+        
     end
+end
+
+local function sprint(t,x,y,a)
+    lg.setColor(0,0,0,a)
+    cprint(t,x+1,y+1)
+    lg.setColor(1,1,1,1)
+    cprint(t,x,y)
 end
 
 function lvl:draw()
@@ -282,7 +297,7 @@ function lvl:draw()
 
             lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
 
-
+            sprint("score: "..self.score,80,conf.gH-10,0.7)
         shove.endLayer()
     shove.endDraw()
 end

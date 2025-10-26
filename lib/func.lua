@@ -23,3 +23,7 @@ function rect(f,x,y,w,h)
         rr(f,x+.5,y+.5,w,h)
     end
 end
+
+function cprint(text,x,y,r)
+    lg.print(text,x-font:getWidth(text)/2,y-font:getHeight()/2,r or 0)
+end

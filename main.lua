@@ -16,6 +16,10 @@ end
 
 function love.load()
 
+    local fontImg=love.image.newImageData("assets/font.png")
+    font=love.graphics.newImageFont(fontImg,"abcdefghijklmnopqrstuvwxyz1234567890!:.| ",1)
+    lg.setFont(font)
+
     timer=require("lib.hump.timer")
 
     gs=require("lib.hump.gamestate")
