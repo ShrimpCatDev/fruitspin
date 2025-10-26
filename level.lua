@@ -153,14 +153,7 @@ function lvl:enter()
     self.time=0
     self.maxTime=0.15
     self.map=generateMap(10,10,0)
-
-    --debug uwuness
-    --[[self.map[1][1]=2
-    self.map[2][1]=3
-    self.map[3][1]=3
-    self.map[4][1]=3
-    self.map[5][1]=3
-    self.map[6][1]=2]]
+    
     for x=1,10 do
         for y=1,10 do
             if math.random(0,1)==1 then
