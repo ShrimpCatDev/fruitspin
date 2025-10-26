@@ -124,13 +124,13 @@ function lvl:newBlock(x,kind)
     table.insert(self.fall,{x=x,y=-8,kind=kind})
 end
 
-lvl.blockScore={10,12,14,16}
+lvl.blockScore={10,10,10,10}
 
 function lvl:addScore(s)
     self.score=self.score+s
     if self.stat.cr then
         self.stat.cr=false
-        timer.tween(0.1,self.stat,{tr=math.random(-2,2)*0.1},"out-cubic",function()
+        timer.tween(0.1,self.stat,{tr=0.2},"out-cubic",function()
             timer.tween(0.1,self.stat,{tr=0},"in-cubic",function()
                 self.stat.cr=true
             end)
