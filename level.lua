@@ -43,7 +43,7 @@ local function rmvBlocks(map)
                         {tile=map[i+1][x]})
                     end
                     for i=y-1,yy do
-                        if map[i][x]==oTile then
+                        if map[i] and map[i][x]==oTile then
                             map[i][x]=0
                         end
                     end
@@ -113,6 +113,7 @@ function lvl:init()
         local quad=love.graphics.newQuad(x*8,0,8,8,self.fruitImg:getWidth(),self.fruitImg:getHeight())
         table.insert(self.fruitQuads,quad)
     end
+    self.fruitKinds=#self.fruitQuads
 end
 
 local function rrect(x,y,w,h)
@@ -124,7 +125,7 @@ function lvl:newBlock(x,kind)
     table.insert(self.fall,{x=x,y=-8,kind=kind})
 end
 
-lvl.blockScore={10,10,10,10}
+lvl.blockScore={10,10,10,10,10,10}
 
 function lvl:addScore(s)
     self.score=self.score+s
@@ -157,7 +158,7 @@ function lvl:enter()
     for x=1,10 do
         for y=1,10 do
             if math.random(0,1)==1 then
-                self.map[y][x]=math.random(1,4)
+                self.map[y][x]=math.random(1,self.fruitKinds)
             end
         end
     end
