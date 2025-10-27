@@ -19,7 +19,7 @@ local function rmvBlocks(map)
         for x=1,#map[y] do
             local oTile=map[y][x]
             if oTile~=0 then
-                --y <;3
+                --y >:3
                 local num=0
 
                 local yy = y
@@ -30,23 +30,23 @@ local function rmvBlocks(map)
                 end
 
                 if num>1 then
-                    for i=y-1,yy-1 do
-                        lvl:addScore(lvl.blockScore[map[i+1][x]])
-                        local xx=lvl.screen.x-lvl.screen.w/2
-                        local yy=lvl.screen.y-lvl.screen.y/2
+                    for i=y,yy do
+                        lvl:addScore(lvl.blockScore[map[i][x]])
+                        local xxx=lvl.screen.x-lvl.screen.w/2
+                        local yyy=lvl.screen.y-lvl.screen.y/2
                         
-                        lvl.particles.new(xx+((x-1)*8),yy+((i-1)*8),math.random(-10,10),-math.random(120,10),0,240,1,
+                        lvl.particles.new(xxx+((x-1)*8),yyy+((yy-2)*8),math.random(-10,10),-math.random(120,10),0,240,1,
                         function(x1,y1,lt,data)
                             lg.draw(lvl.fruitImg,lvl.fruitQuads[data.tile],x1+4,y1+4,-lt*8,1,1,4,4)
                         end,
                         function() end,
-                        {tile=map[i+1][x]})
+                        {tile=map[i][x]})
                     end
-                    for i=y-1,yy do
-                        if map[i] and map[i][x]==oTile then
-                            map[i][x]=0
-                        end
+
+                    for i=y,yy do
+                        map[i][x]=0
                     end
+
                     return
                 end
             end
@@ -66,10 +66,10 @@ local function rmvBlocks(map)
                 if num>1 then
                     for i=x,xx do
                         lvl:addScore(lvl.blockScore[map[y][i]])
-                        local xx=lvl.screen.x-lvl.screen.w/2
-                        local yy=lvl.screen.y-lvl.screen.y/2
+                        local xxx=lvl.screen.x-lvl.screen.w/2
+                        local yyy=lvl.screen.y-lvl.screen.y/2
                         
-                        lvl.particles.new(xx+((i-1)*8),yy+((y-2)*8),math.random(-10,10),-math.random(120,10),0,240,1,
+                        lvl.particles.new(xxx+((i-1)*8),yyy+((y-2)*8),math.random(-10,10),-math.random(120,10),0,240,1,
                         function(x1,y1,lt,data)
                             lg.draw(lvl.fruitImg,lvl.fruitQuads[data.tile],x1+4,y1+4,-lt*8,1,1,4,4)
                         end,
