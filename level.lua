@@ -15,7 +15,7 @@ local function fallBlocks(map)
 end
 
 local function rmvBlocks(map)
-    for y=#map,1,-1 do
+    for y=1,#map do
         for x=1,#map[y] do
             local oTile=map[y][x]
             if oTile~=0 then
@@ -155,6 +155,11 @@ function lvl:enter()
     self.maxTime=0.15
     self.map=generateMap(10,10,0)
     
+    --[[self.map[1][1]=4
+    self.map[2][1]=5
+    self.map[3][1]=5
+    self.map[4][1]=5
+    self.map[5][1]=6]]
     for x=1,10 do
         for y=1,10 do
             if math.random(0,1)==1 then
