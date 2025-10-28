@@ -47,6 +47,8 @@ local function rmvBlocks(map)
                         map[i][x]=0
                     end
 
+                    lvl.sfx.match:play()
+
                     return
                 end
             end
@@ -81,6 +83,8 @@ local function rmvBlocks(map)
                         map[y][i]=0
                     end
 
+                    lvl.sfx.match:play()
+
                     return
                 end
             end
@@ -114,6 +118,15 @@ function lvl:init()
         table.insert(self.fruitQuads,quad)
     end
     self.fruitKinds=#self.fruitQuads
+
+    self.sfx={
+        rotate=ripple.newSound(love.audio.newSource('assets/sfx/rotate.wav', 'static')),
+        match=ripple.newSound(love.audio.newSource('assets/sfx/match.wav', 'static'))
+    }
+
+    self.music={
+        temp=ripple.newSound(love.audio.newSource('assets/music/temp.ogg', 'stream'),{loop=true,volume=1}),
+    }
 end
 
 local function rrect(x,y,w,h)
@@ -152,7 +165,7 @@ function lvl:enter()
     self.bg:init()
 
     self.time=0
-    self.maxTime=0.15
+    self.maxTime=0.4
     self.map=generateMap(10,10,0)
     
     --[[self.map[1][1]=4
@@ -160,17 +173,19 @@ function lvl:enter()
     self.map[3][1]=5
     self.map[4][1]=5
     self.map[5][1]=6]]
-    for x=1,10 do
+    --[[for x=1,10 do
         for y=1,10 do
             if math.random(0,1)==1 then
                 self.map[y][x]=math.random(1,self.fruitKinds)
             end
         end
-    end
+    end]]
+    self.music.temp:play()
 end
 
 function lvl:rotateBoard(dir)
     if self.screen.canRotate then
+        self.sfx.rotate:play()
         self.screen.canRotate=false
         self.screen.r=1.5708*dir
         timer.tween(0.15,self.screen,{r=0},"out-cubic",function()
@@ -220,28 +235,26 @@ function lvl:update(dt)
     self.time=self.time+dt
 
     if self.time>=self.maxTime then
+        local spawn=false
         if not checkBlockFall(self.map) then
             rmvBlocks(self.map)
+            spawn=true
+            
+        end
+
+        fallBlocks(self.map)
+
+        if spawn then
             if not checkBlockFall(self.map) then
                 local x=math.random(1,10)
                 while self.map[1][x]~=0 do
                     x=math.random(1,10)
                 end
-                self.map[1][x]=math.random(1,4)
+                self.map[1][x]=math.random(1,self.fruitKinds)
             end
-            
-            --[[if #self.fall<=0 then
-                self:newBlock(math.random(1,10),math.random(1,4))
-            end]]
-            
         end
-
-        fallBlocks(self.map)
-        --rmvBlocks(self.map)
         
         self.time=0
-
-        
     end
 end
 

@@ -12,3 +12,5 @@ input=baton.new(conf.input)
 
 shove.setResolution(conf.gW,conf.gH,{fitMethod=conf.fit,scalingFilter=conf.textureFilter,renderMode=conf.render})
 shove.setWindowMode(conf.wW,conf.wH,{resizable=true,vsync=conf.vsync})
+
+ripple=require("lib.ripple")
