@@ -226,6 +226,16 @@ function lvl:update(dt)
         self.patternRotate=self.patternRotate-1
         self:rotateBoard(1)
     end
+
+    if input:pressed("fall") then
+        self.prevTime=self.maxTime
+        self.maxTime=self.maxTime*0.5
+    end
+
+    if input:released("fall") then
+        self.maxTime=self.prevTime
+    end
+
     if self.patternRotate<0 then
         self.patternRotate=1
     elseif self.patternRotate>1 then
