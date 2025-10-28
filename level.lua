@@ -103,6 +103,18 @@ local function checkBlockFall(map)
     return false
 end
 
+local function getBrickNumber(map)
+    local num=0
+    for y=1,#map do
+        for x=1,#map[y] do
+            if map[y][x]~=0 then
+                num=num+1
+            end
+        end
+    end
+    return num
+end
+
 function lvl:init()
     self.particles=require("lib.particles")
 
@@ -336,6 +348,8 @@ function lvl:draw()
             lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
 
             sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
+
+            --sprint(getBrickNumber(self.map),0,0)
         shove.endLayer()
     shove.endDraw()
 end
