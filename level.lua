@@ -165,6 +165,7 @@ function lvl:addScore(s)
 end
 
 function lvl:enter()
+    self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=1,h=1,r=0}
     self.stat={tr=0,cr=true}
     self.score=0
     self.fall={}
@@ -296,7 +297,6 @@ function lvl:draw()
     self.bg:cDraw()
 
     lg.setCanvas(self.next.img)
-
         lg.setColor(color("#fdb193"))
         rrect(0,1,self.next.w,self.next.h)
         lg.setColor(color("#fff3ee"))
@@ -308,7 +308,6 @@ function lvl:draw()
         end
 
         lg.setColor(1,1,1,1)
-
     lg.setCanvas(self.screen.img)
         for x=0,9 do
             for y=0,9 do
@@ -326,43 +325,44 @@ function lvl:draw()
                 end
             end
         end
-        
+    lg.setCanvas(self.disp.img)
+        self.bg:draw()
+
+        local s=self.screen
+
+        lg.setColor(0,0,0,0.55)
+        lg.rectangle("fill",s.x-4-(s.w/2)+2,0,s.w+7,s.h+s.y-(s.w/2)+5)
+        lg.setColor(color("#482a37"))
+        lg.rectangle("fill",s.x-4-(s.w/2),0,s.w+8,s.h+s.y-(s.w/2)+3)
+        lg.rectangle("fill",s.x-4-(s.w/2)+1,0,s.w+6,s.h+s.y-(s.w/2)+4)
+        lg.setColor(color("#9a5854"))
+        lg.rectangle("fill",s.x-(s.w/2),0,s.w,s.h+s.y-(s.w/2))
+
+        lg.setColor(1,1,1,1)
+            
+        lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
+        lg.draw(self.next.arrow,self.next.x-2,self.next.y+12)
+
+        lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
+
+        for k,b in ipairs(self.fall) do
+            lg.draw(self.fruitImg,self.fruitQuads[b.kind],(b.x-1)*8 + self.screen.x-self.screen.w/2,b.y)
+
+            local yy=math.floor((b.y+8)/8)
+                --lg.rectangle("fill",(b.x-1)*8 + self.screen.x-self.screen.w/2,yy*8,8,8)
+        end
+
+        self.particles.draw()  
+
+        sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
     lg.setCanvas()
 
     shove.beginDraw()
         shove.beginLayer("game")
 
-            self.bg:draw()
-
-            local s=self.screen
-
-            lg.setColor(0,0,0,0.55)
-            lg.rectangle("fill",s.x-4-(s.w/2)+2,0,s.w+7,s.h+s.y-(s.w/2)+5)
-            lg.setColor(color("#482a37"))
-            lg.rectangle("fill",s.x-4-(s.w/2),0,s.w+8,s.h+s.y-(s.w/2)+3)
-            lg.rectangle("fill",s.x-4-(s.w/2)+1,0,s.w+6,s.h+s.y-(s.w/2)+4)
-            lg.setColor(color("#9a5854"))
-            lg.rectangle("fill",s.x-(s.w/2),0,s.w,s.h+s.y-(s.w/2))
-
-            lg.setColor(1,1,1,1)
-            
-            lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
-            lg.draw(self.next.arrow,self.next.x-2,self.next.y+12)
-
-            lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
-
-            for k,b in ipairs(self.fall) do
-                lg.draw(self.fruitImg,self.fruitQuads[b.kind],(b.x-1)*8 + self.screen.x-self.screen.w/2,b.y)
-
-                local yy=math.floor((b.y+8)/8)
-                --lg.rectangle("fill",(b.x-1)*8 + self.screen.x-self.screen.w/2,yy*8,8,8)
-            end
-
-            self.particles.draw()
-
-            
-
-            sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
+            local w=conf.gW/2
+            local h=conf.gH/2
+            lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
 
             --sprint(getBrickNumber(self.map),0,0)
         shove.endLayer()
