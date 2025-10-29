@@ -15,7 +15,6 @@ function menu:init()
         x=conf.gW/2,
         y=8,
         items={
-            "",
             "start game",
             "",
             "difficulty: "..self.options.difficulty.options[self.options.difficulty.selected],
@@ -59,6 +58,12 @@ function menu:update(dt)
 
         while self.menu.items[self.select]=="" do
             self.select=self.select+1
+        end
+    end
+    if input:pressed("select") then
+        local sel=self.menu.items[self.select]
+        if sel=="start game" then
+            gs.switch(state["level"])
         end
     end
 end

@@ -17,7 +17,8 @@ conf.input={
         rotateRight={"key:right","key:d"},
         fall={"key:down","key:s"},
         up={"key:up","key:w"},
-        down={"key:down","key:s"}
+        down={"key:down","key:s"},
+        select={"key:return","key:space","key:z"}
     },
     pairs={
 
