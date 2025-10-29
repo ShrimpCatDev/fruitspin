@@ -171,7 +171,7 @@ function lvl:enter()
     self.fallSpeed=20
 
     self.particles.clear()
-    self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=6,w=28,h=10}
+    self.next={img=lg.newCanvas(28,12),x=conf.gW/2,y=6,w=28,h=10,arrow=lg.newImage("assets/arrow.png")}
 
     self.bg=require("bgs/bg1")
     self.bg:init()
@@ -193,6 +193,9 @@ function lvl:enter()
         end
     end]]
     self.music.temp:play()
+
+    self.nextFruit={1,6,3}
+    
 end
 
 function lvl:rotateBoard(dir)
@@ -272,7 +275,9 @@ function lvl:update(dt)
                 while self.map[1][x]~=0 do
                     x=math.random(1,10)
                 end
-                self.map[1][x]=math.random(1,self.fruitKinds)
+                table.insert(self.nextFruit,1,math.random(1,self.fruitKinds))
+                table.remove(self.nextFruit,4)
+                self.map[1][x]=self.nextFruit[2]
             end
         end
         
@@ -296,6 +301,12 @@ function lvl:draw()
         rrect(0,1,self.next.w,self.next.h)
         lg.setColor(color("#fff3ee"))
         rrect(0,0,self.next.w,self.next.h)
+        lg.setColor(1,1,1,1)
+
+        for k,v in pairs(self.nextFruit) do
+            lg.draw(self.fruitImg,self.fruitQuads[v],(k-1)*9+1,1)
+        end
+
         lg.setColor(1,1,1,1)
 
     lg.setCanvas(self.screen.img)
@@ -334,6 +345,10 @@ function lvl:draw()
             lg.rectangle("fill",s.x-(s.w/2),0,s.w,s.h+s.y-(s.w/2))
 
             lg.setColor(1,1,1,1)
+            
+            lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
+            lg.draw(self.next.arrow,self.next.x-2,self.next.y+12)
+
             lg.draw(s.img,s.x,s.y,s.r,1,1,s.w/2,s.h/2)
 
             for k,b in ipairs(self.fall) do
@@ -345,7 +360,7 @@ function lvl:draw()
 
             self.particles.draw()
 
-            lg.draw(self.next.img,self.next.x,self.next.y,0,1,1,self.next.w/2,0)
+            
 
             sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
 
