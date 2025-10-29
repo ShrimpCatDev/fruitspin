@@ -26,7 +26,8 @@ function love.load()
     gs.registerEvents()
 
     state={
-        ["level"] = require("level")
+        ["level"] = require("level"),
+        ["menu"] = require("menu")
     }
     
     math.randomseed(love.math.random(0,845261654))
@@ -40,7 +41,7 @@ function love.load()
     shove.addGlobalEffect(lutEffect)
     shove.createLayer("game")
 
-    gs.switch(state["level"])
+    gs.switch(state["menu"])
 
     
 
