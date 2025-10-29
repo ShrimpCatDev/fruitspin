@@ -165,7 +165,7 @@ function lvl:addScore(s)
 end
 
 function lvl:enter()
-    self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=1,h=1,r=0}
+    self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
     self.stat={tr=0,cr=true}
     self.score=0
     self.fall={}
@@ -196,7 +196,15 @@ function lvl:enter()
     self.music.temp:play()
 
     self.nextFruit={1,6,3}
-    
+
+    self.frozen=true
+
+    self.disp.timer:tween(1,self.disp,{r=0,h=1,w=1},"out-elastic",function()
+        self.frozen=false
+    end)
+
+    self.gTime=0
+
 end
 
 function lvl:rotateBoard(dir)
@@ -212,77 +220,68 @@ end
 
 function lvl:update(dt)
 
-    local rmv={}
+    self.disp.timer:update(dt)
 
-    --[[for k,b in ipairs(self.fall) do
-        b.y=b.y+self.fallSpeed*dt
-        local ty=math.floor((b.y)/8)-2
-        if ty>0 and ((ty+1<=10 and self.map[ty+1][b.x]~=0) or ty==10) and self.map[ty][b.x]==0 then
-            self.map[ty][b.x]=b.kind
-            table.insert(rmv,k)
+    if not self.frozen then
+        self.gTime=self.gTime+dt
+        timer.update(dt)
+    
+        self.particles.update(dt)
+        self.bg:update(dt)
+        local rmv={}
+
+        if input:pressed("rotateRight") and self.screen.canRotate then
+            self.map=rotate.rotate(self.map,1)
+            self.patternRotate=self.patternRotate+1
+            self:rotateBoard(-1)
         end
-        
-    end
+        if input:pressed("rotateLeft") and self.screen.canRotate then
+            self.map=rotate.rotate(self.map,3)
+            self.patternRotate=self.patternRotate-1
+            self:rotateBoard(1)
+        end
 
-    for i=#rmv,1,-1 do
-        table.remove(self.fall,rmv[i])
-    end]]
-
-    self.particles.update(dt)
-    timer.update(dt)
-    self.bg:update(dt)
-
-    if input:pressed("rotateRight") and self.screen.canRotate then
-        self.map=rotate.rotate(self.map,1)
-        self.patternRotate=self.patternRotate+1
-        self:rotateBoard(-1)
-    end
-    if input:pressed("rotateLeft") and self.screen.canRotate then
-        self.map=rotate.rotate(self.map,3)
-        self.patternRotate=self.patternRotate-1
-        self:rotateBoard(1)
-    end
-
-    if input:pressed("fall") then
-        self.prevTime=self.maxTime
+        if input:pressed("fall") then
+            self.prevTime=self.maxTime
         self.maxTime=self.maxTime*0.5
-    end
-
-    if input:released("fall") then
-        self.maxTime=self.prevTime
-    end
-
-    if self.patternRotate<0 then
-        self.patternRotate=1
-    elseif self.patternRotate>1 then
-        self.patternRotate=0
-    end
-
-    self.time=self.time+dt
-
-    if self.time>=self.maxTime then
-        local spawn=false
-        if not checkBlockFall(self.map) then
-            rmvBlocks(self.map)
-            spawn=true
-            
         end
 
-        fallBlocks(self.map)
+        if input:released("fall") then
+            self.maxTime=self.prevTime
+        end
 
-        if spawn then
+        if self.patternRotate<0 then
+            self.patternRotate=1
+        elseif self.patternRotate>1 then
+            self.patternRotate=0
+        end
+
+        self.time=self.time+dt
+
+        if self.time>=self.maxTime then
+            local spawn=false
             if not checkBlockFall(self.map) then
-                local x=math.random(1,10)
-                while self.map[1][x]~=0 do
-                    x=math.random(1,10)
-                end
-                table.insert(self.nextFruit,1,math.random(1,self.fruitKinds))
-                table.remove(self.nextFruit,4)
-                self.map[1][x]=self.nextFruit[2]
+                rmvBlocks(self.map)
+                spawn=true
+                
             end
+
+            fallBlocks(self.map)
+
+            if spawn then
+                if not checkBlockFall(self.map) then
+                    local x=math.random(1,10)
+                    while self.map[1][x]~=0 do
+                        x=math.random(1,10)
+                    end
+                    table.insert(self.nextFruit,1,math.random(1,self.fruitKinds))
+                    table.remove(self.nextFruit,4)
+                    self.map[1][x]=self.nextFruit[2]
+                end
+            end
+            
+            self.time=0
         end
-        
-        self.time=0
     end
 end
 

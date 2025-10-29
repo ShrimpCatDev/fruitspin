@@ -11,18 +11,21 @@ function bg:init()
     self.shader:send("speed",2)
 
     self.canvas=lg.newCanvas(160,64)
+
+    self.time=0
 end
 
 function bg:update(dt)
-    self.shader:send("time",love.timer.getTime())
+    self.time=self.time+dt
+    self.shader:send("time",self.time)
 end
 
 function bg:cDraw()
     lg.setCanvas(self.canvas)
         lg.clear(color("#357bd8"))
-        lg.draw(self.img,0,math.cos(love.timer.getTime()*3) + 4)
+        lg.draw(self.img,0,math.cos(self.time*3) + 4)
 
-        local t=love.timer.getTime()
+        local t=self.time
         lg.draw(self.shipImg,160-((t*16)%176),16+math.cos(t*3 +2)*3)
         
     lg.setCanvas()
@@ -37,7 +40,7 @@ function bg:draw()
     lg.setShader()
 
     lg.setColor(1,1,1,1)
-    lg.draw(self.duckImg,16,100+math.cos(love.timer.getTime()*3 +2))
+    lg.draw(self.duckImg,16,100+math.cos(self.time*3 +2))
 end
 
 return bg
