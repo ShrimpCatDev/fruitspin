@@ -13,7 +13,7 @@ function menu:init()
     }
     self.menu={
         x=conf.gW/2,
-        y=8,
+        y=-100,
         items={
             "start game",
             "",
@@ -28,12 +28,19 @@ end
 function menu:enter()
     self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
     self.frozen=true
-    self.disp.timer:tween(1,self.disp,{r=0,h=1,w=1},"out-elastic",function()
+    self.disp.timer:tween(0.7,self.disp,{r=0,h=1,w=1},"out-elastic",function()
         self.frozen=false
+        --local y=self.menu.y
+        --self.menu.y=-100
+        self.disp.timer:tween(1,self.menu,{y=8},"out-elastic")
     end)
 
     self.select=1
+
+    self.selBounce=-2
+    self.bIng=false
 end
+
 
 function menu:update(dt)
     self.disp.timer:update(dt)
@@ -81,9 +88,10 @@ function menu:update(dt)
 end
 
 local function sprint(t,x,y,a,r)
+    local cr,cg,cb,ca=lg.getColor()
     lg.setColor(0,0,0,a)
     cprint(t,x+1,y+1,r)
-    lg.setColor(1,1,1,1)
+    lg.setColor(cr,cg,cb,ca)
     cprint(t,x,y,r)
 end
 
@@ -94,10 +102,12 @@ function menu:draw()
         for k,v in pairs(self.menu.items) do
             if self.select==k then
                 lg.setColor(color("#fff3ee"))
+                sprint(v,m.x,(m.y+(k-1)*font:getHeight())+self.selBounce,0.5,0)
             else
                 lg.setColor(color("#83c3d4"))
+                sprint(v,m.x,m.y+(k-1)*font:getHeight(),0.5,0)
             end
-            cprint(v,m.x,m.y+(k-1)*font:getHeight(),0)
+            
         end
         lg.setColor(1,1,1,1)
     lg.setCanvas()
