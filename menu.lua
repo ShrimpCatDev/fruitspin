@@ -26,44 +26,56 @@ function menu:init()
 end
 
 function menu:enter()
+    self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
+    self.frozen=true
+    self.disp.timer:tween(1,self.disp,{r=0,h=1,w=1},"out-elastic",function()
+        self.frozen=false
+    end)
+
     self.select=1
 end
 
 function menu:update(dt)
-    if input:pressed("up") then
-        self.select=self.select-1
-
-        while self.menu.items[self.select]=="" do
+    self.disp.timer:update(dt)
+    if not self.frozen then
+        if input:pressed("up") then
             self.select=self.select-1
-        end
 
-        if self.select<1 then
-            self.select=#self.menu.items
-        end
+            while self.menu.items[self.select]=="" do
+                self.select=self.select-1
+            end
 
-        while self.menu.items[self.select]=="" do
-            self.select=self.select-1
-        end
-    end
-    if input:pressed("down") then
-        self.select=self.select+1
+            if self.select<1 then
+                self.select=#self.menu.items
+            end
 
-        while self.menu.items[self.select]=="" do
+            while self.menu.items[self.select]=="" do
+                self.select=self.select-1
+            end
+        end
+        if input:pressed("down") then
             self.select=self.select+1
-        end
 
-        if self.select>#self.menu.items then
-            self.select=1
-        end
+            while self.menu.items[self.select]=="" do
+                self.select=self.select+1
+            end
 
-        while self.menu.items[self.select]=="" do
-            self.select=self.select+1
+            if self.select>#self.menu.items then
+                self.select=1
+            end
+
+            while self.menu.items[self.select]=="" do
+                self.select=self.select+1
+            end
         end
-    end
-    if input:pressed("select") then
-        local sel=self.menu.items[self.select]
-        if sel=="start game" then
-            gs.switch(state["level"])
+        if input:pressed("select") then
+            local sel=self.menu.items[self.select]
+            if sel=="start game" then
+                self.frozen=true
+                self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
+                    gs.switch(state["level"])
+                end)
+            end
         end
     end
 end
@@ -76,17 +88,25 @@ local function sprint(t,x,y,a,r)
 end
 
 function menu:draw()
+    lg.setCanvas(self.disp.img)
+        lg.clear(0.5,0.5,0.5)
+        local m=self.menu
+        for k,v in pairs(self.menu.items) do
+            if self.select==k then
+                lg.setColor(color("#fff3ee"))
+            else
+                lg.setColor(color("#83c3d4"))
+            end
+            cprint(v,m.x,m.y+(k-1)*font:getHeight(),0)
+        end
+        lg.setColor(1,1,1,1)
+    lg.setCanvas()
     shove.beginDraw()
         shove.beginLayer("game")
-            local m=self.menu
-            for k,v in pairs(self.menu.items) do
-                if self.select==k then
-                    lg.setColor(color("#fff3ee"))
-                else
-                    lg.setColor(color("#83c3d4"))
-                end
-                cprint(v,m.x,m.y+(k-1)*font:getHeight(),0)
-            end
+            lg.setColor(1,1,1,1)
+            local w=conf.gW/2
+            local h=conf.gH/2
+            lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
         shove.endLayer()
     shove.endDraw()
 end
