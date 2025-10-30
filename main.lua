@@ -16,7 +16,7 @@ end
 
 function love.load()
 
-    options={difficulty=4,speed=1,music=true,sfx=true}
+    options={difficulty=3,speed=3,music=true,sfx=true}
 
     local fontImg=love.image.newImageData("assets/font.png")
     font=love.graphics.newImageFont(fontImg,"abcdefghijklmnopqrstuvwxyz1234567890!:.| ",1)

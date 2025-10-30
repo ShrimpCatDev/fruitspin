@@ -138,7 +138,19 @@ function menu:update(dt)
                 self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
                     gs.switch(state["level"])
                 end)
+            elseif sel=="difficulty: "..self.options.difficulty.options[options.difficulty] then
+                options.difficulty=options.difficulty+1
+                if options.difficulty>#self.options.difficulty.options then
+                    options.difficulty=1
+                end
+            elseif sel=="speed: "..self.options.speed.options[options.speed] then
+                options.speed=options.speed+1
+                if options.speed>#self.options.speed.options then
+                    options.speed=1
+                end
             end
+
+            self:refresh()
         end
     end
 end
