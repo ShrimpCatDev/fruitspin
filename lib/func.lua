@@ -24,6 +24,11 @@ function rect(f,x,y,w,h)
     end
 end
 
+function rrect(x,y,w,h)
+    lg.rectangle("fill",x+1,y,w-2,h)
+    lg.rectangle("fill",x,y+1,w,h-2)
+end
+
 function cprint(text,x,y,r)
     lg.print(text,x,y,r or 0,1,1,font:getWidth(text)/2,font:getHeight()/2)
 end

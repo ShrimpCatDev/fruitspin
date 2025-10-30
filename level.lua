@@ -141,11 +141,6 @@ function lvl:init()
     }
 end
 
-local function rrect(x,y,w,h)
-    lg.rectangle("fill",x+1,y,w-2,h)
-    lg.rectangle("fill",x,y+1,w,h-2)
-end
-
 function lvl:newBlock(x,kind)
     table.insert(self.fall,{x=x,y=-8,kind=kind})
 end
