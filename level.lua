@@ -14,6 +14,20 @@ local function fallBlocks(map)
     end
 end
 
+lvl.diffs={
+    1,
+    3,
+    4,
+    6
+}
+
+lvl.spds={
+    1,
+    0.5,
+    0.35,
+    0.1
+}
+
 local function rmvBlocks(map)
     for y=1,#map do
         for x=1,#map[y] do
@@ -129,7 +143,7 @@ function lvl:init()
         local quad=love.graphics.newQuad(x*8,0,8,8,self.fruitImg:getWidth(),self.fruitImg:getHeight())
         table.insert(self.fruitQuads,quad)
     end
-    self.fruitKinds=#self.fruitQuads
+    self.fruitKinds=self.diffs[options.difficulty]
 
     self.sfx={
         rotate=ripple.newSound(love.audio.newSource('assets/sfx/rotate.wav', 'static')),
@@ -174,7 +188,7 @@ function lvl:enter()
     self.bg:init()
 
     self.time=0
-    self.maxTime=0.4
+    self.maxTime=self.spds[options.speed]
     self.map=generateMap(10,10,0)
     
     --[[self.map[1][1]=4
@@ -191,7 +205,7 @@ function lvl:enter()
     end]]
     self.music.temp:play()
 
-    self.nextFruit={1,6,3}
+    self.nextFruit={math.random(1,self.fruitKinds),math.random(1,self.fruitKinds),math.random(1,self.fruitKinds)}
 
     self.frozen=true
 
