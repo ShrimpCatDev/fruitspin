@@ -189,8 +189,12 @@ function lvl:enter()
 
     self.time=0
 
+    print(self.spds[options.speed])
+
     self.maxTime=self.spds[options.speed]
     self.fruitKinds=self.diffs[options.difficulty]
+
+    print(self.maxTime)
 
     self.map=generateMap(10,10,0)
 
