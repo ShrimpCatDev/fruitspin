@@ -1,5 +1,6 @@
 conf=require 'config'
 
+lume=require("lib.lume")
 gs=require "lib.hump.gamestate"
 gs.registerEvents()
 

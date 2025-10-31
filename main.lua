@@ -14,7 +14,26 @@ function generateMap(w,h,val)
     return temp
 end
 
+function save()
+    local d=lume.serialize(data)
+    love.filesystem.write("savedata.sav",d)
+end
+
+function load()
+    data=lume.deserialize(love.filesystem.read("savedata.sav"))
+end
+
 function love.load()
+
+    data={hiScore=0}
+
+    if love.filesystem.getInfo("savedata.sav") then
+        load()
+    else
+        save()
+    end
+
+    love.system.setClipboardText(love.filesystem.getSaveDirectory())
 
     options={difficulty=3,speed=3,music=true,sfx=true}
 

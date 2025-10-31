@@ -209,6 +209,7 @@ function lvl:enter()
     end)
 
     self.gTime=0
+    self.prevTime=0
 
 end
 
@@ -247,15 +248,21 @@ function lvl:update(dt)
         end
 
         if input:pressed("fall") then
-            self.prevTime=self.maxTime
-        self.maxTime=self.maxTime*0.5
+            --self.prevTime=self.maxTime
+            self.maxTime=self.maxTime*0.5
+            print(self.maxTime)
         end
 
         if input:released("fall") then
-            self.maxTime=self.prevTime
+            self.maxTime=self.maxTime*2
+            print(self.maxTime)
         end
 
         if input:pressed("pause") then
+            if self.score>data.hiScore then
+                data.hiScore=self.score
+                save()
+            end
             self.frozen=true
             self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
                 gs.switch(state["menu"])

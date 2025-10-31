@@ -197,7 +197,7 @@ function menu:draw()
         end
 
         lg.setColor(color("#fff3ee"))
-        sprint("hi score: 5260",conf.gW/2,100,0.5,0,1,1)
+        sprint("hi score: "..data.hiScore,conf.gW/2,100,0.5,0,1,1)
 
         lg.setColor(1,1,1,1)
 
