@@ -188,21 +188,12 @@ function lvl:enter()
     self.bg:init()
 
     self.time=0
+
     self.maxTime=self.spds[options.speed]
+    self.fruitKinds=self.diffs[options.difficulty]
+
     self.map=generateMap(10,10,0)
-    
-    --[[self.map[1][1]=4
-    self.map[2][1]=5
-    self.map[3][1]=5
-    self.map[4][1]=5
-    self.map[5][1]=6]]
-    --[[for x=1,10 do
-        for y=1,10 do
-            if math.random(0,1)==1 then
-                self.map[y][x]=math.random(1,self.fruitKinds)
-            end
-        end
-    end]]
+
     self.music.temp:play()
 
     self.nextFruit={math.random(1,self.fruitKinds),math.random(1,self.fruitKinds),math.random(1,self.fruitKinds)}
@@ -258,6 +249,13 @@ function lvl:update(dt)
 
         if input:released("fall") then
             self.maxTime=self.prevTime
+        end
+
+        if input:pressed("pause") then
+            self.frozen=true
+            self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
+                gs.switch(state["menu"])
+            end)
         end
 
         if self.patternRotate<0 then

@@ -18,7 +18,8 @@ conf.input={
         fall={"key:down","key:s"},
         up={"key:up","key:w"},
         down={"key:down","key:s"},
-        select={"key:return","key:space","key:z"}
+        select={"key:return","key:space","key:z"},
+        pause={"key:escape"}
     },
     pairs={
 
