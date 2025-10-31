@@ -130,6 +130,7 @@ local function getBrickNumber(map)
 end
 
 function lvl:init()
+    love.audio.stop()
     self.particles=require("lib.particles")
 
     self.deg=math.rad(90)

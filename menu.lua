@@ -46,6 +46,7 @@ function menu:refresh()
 end
 
 function menu:enter()
+    love.audio.stop()
     timer.clear()
 
     self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
