@@ -49,7 +49,7 @@ local function rmvBlocks(map)
                         local xxx=lvl.screen.x-lvl.screen.w/2
                         local yyy=lvl.screen.y-lvl.screen.y/2
                         
-                        lvl.particles.new(xxx+((x-1)*8),yyy+((yy-2)*8),math.random(-10,10),-math.random(120,10),0,240,1,
+                        lvl.particles.new(xxx+((x-1)*8),yyy+((yy-3)*8),math.random(-10,10),-math.random(120,10),0,240,1,
                         function(x1,y1,lt,data)
                             lg.draw(lvl.fruitImg,lvl.fruitQuads[data.tile],x1+4,y1+4,-lt*8,1,1,4,4)
                         end,
