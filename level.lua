@@ -375,7 +375,7 @@ function lvl:draw()
             local h=conf.gH/2
             lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
 
-            --sprint(getBrickNumber(self.map),0,0)
+            sprint(getBrickNumber(self.map),4,4)
         shove.endLayer()
     shove.endDraw()
 end
