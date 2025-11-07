@@ -38,7 +38,7 @@ function love.load()
     options={difficulty=3,speed=3,music=true,sfx=true}
 
     local fontImg=love.image.newImageData("assets/font.png")
-    font=love.graphics.newImageFont(fontImg,"abcdefghijklmnopqrstuvwxyz1234567890!:.| ",1)
+    font=love.graphics.newImageFont(fontImg,"abcdefghijklmnopqrstuvwxyz1234567890!:.| /",1)
     lg.setFont(font)
 
     timer=require("lib.hump.timer")

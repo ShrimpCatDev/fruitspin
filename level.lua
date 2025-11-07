@@ -201,6 +201,7 @@ function lvl:enter()
 
     self.maxTime=self.spds[options.speed]
     self.fruitKinds=self.diffs[options.difficulty]
+    self.maxBlocks=self.maxes[options.difficulty]
 
     print(self.maxTime)
 
@@ -381,6 +382,9 @@ function lvl:draw()
         self.particles.draw()  
 
         sprint("score: "..self.score,80,conf.gH-10,0.7,self.stat.tr)
+
+        local txt=getBrickNumber(self.map).."/"..self.maxBlocks
+        sprint(txt,1+font:getWidth(txt)/2,4)
     lg.setCanvas()
 
     shove.beginDraw()
@@ -390,7 +394,7 @@ function lvl:draw()
             local h=conf.gH/2
             lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
 
-            sprint(getBrickNumber(self.map),4,4)
+            
         shove.endLayer()
     shove.endDraw()
 end
