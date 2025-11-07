@@ -21,6 +21,13 @@ lvl.diffs={
     6
 }
 
+lvl.maxes={
+    99,
+    70,
+    50,
+    40
+}
+
 lvl.spds={
     1,
     0.5,
