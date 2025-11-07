@@ -22,6 +22,10 @@ function menu:init()
         }
     }
 
+    self.music={
+        bg=ripple.newSound(love.audio.newSource('assets/music/titleMusic.mp3', 'stream'),{loop=true,volume=1}),
+    }
+
     self.oImg=lg.newImage("assets/outline.png")
 
     self.fruitImg=lg.newImage("assets/fruit.png")
@@ -47,6 +51,7 @@ end
 
 function menu:enter()
     love.audio.stop()
+    self.music.bg:play()
     timer.clear()
 
     self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
