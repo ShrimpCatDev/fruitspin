@@ -25,7 +25,7 @@ lvl.maxes={
     99,
     70,
     50,
-    1
+    45
 }
 
 lvl.spds={
@@ -267,10 +267,12 @@ function lvl:update(dt)
             self:rotateBoard(1)
         end
 
+        --local psd=false
         if input:pressed("fall") then
             --self.prevTime=self.maxTime
             self.maxTime=self.fastSpeed
             print(self.maxTime)
+            --psd=true
         end
 
         if input:released("fall") then
@@ -337,7 +339,7 @@ function lvl:update(dt)
         end
     end
     
-    if input:pressed("pause") and not self.gameOver then
+    if input:pressed("pause") and not self.gameOver and not self.frozen then
         
         if self.pause.b==true then
             self.pause.b=false
@@ -346,6 +348,32 @@ function lvl:update(dt)
             self.pause.b=true
             --self.pause={b=false,x=conf.gW/2,y=-conf.gH/2}
             timer.tween(0.5,self.pause,{y=0},"out-cubic")
+        end
+    end
+
+    if self.pause.b and not self.frozen then
+        if input:pressed("up") then
+            self.pause.sel=self.pause.sel-1
+            if self.pause.sel<=0 then
+                self.pause.sel=#self.pause.menu
+            end
+        end
+        if input:pressed("down") then
+            self.pause.sel=self.pause.sel+1
+            if self.pause.sel>#self.pause.menu then
+                self.pause.sel=1
+            end
+        end
+        if input:pressed("select") then
+            if self.pause.sel==1 then
+                self.pause.b=false
+                timer.tween(0.5,self.pause,{y=-conf.gH},"out-cubic")
+            elseif self.pause.sel==2 then
+                self.frozen=true
+                self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
+                    gs.switch(state["menu"])
+                end)
+            end
         end
     end
 end
@@ -463,6 +491,15 @@ function lvl:draw()
             lg.setColor(1,1,1,1)
                 sprint("paused",conf.gW/2,16,0.5)
                 sprint("hi score: "..data.hiScore,conf.gW/2,40,0.5)
+            for k,v in ipairs(self.pause.menu) do
+                if k==self.pause.sel then
+                    lg.setColor(color("#fff3ee"))
+                    sprint(v,conf.gW/2,(70+(k-1)*font:getHeight())-2,0.5,0,1,2)
+                else
+                    lg.setColor(color("#ffd9b6ff"))
+                    sprint(v,conf.gW/2,70+(k-1)*font:getHeight(),0.5,0)
+                end
+            end
             lg.translate(0,0)
             lg.pop()
         --end
@@ -476,7 +513,7 @@ function lvl:draw()
             local h=conf.gH/2
             lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
 
-            
+            lg.print(self.maxTime,0,110)
         shove.endLayer()
     shove.endDraw()
 end
