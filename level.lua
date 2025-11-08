@@ -25,7 +25,7 @@ lvl.maxes={
     99,
     70,
     50,
-    40
+    1
 }
 
 lvl.spds={
@@ -184,6 +184,8 @@ end
 function lvl:enter()
 
     self.gameOver=false
+    self.pause={b=false,x=conf.gW/2,y=-conf.gH,menu={"resume game","back to title"},sel=1}
+
     self.tray={x=0,y=-conf.gH}
 
     love.audio.stop()
@@ -225,6 +227,9 @@ function lvl:enter()
     self.gTime=0
     self.prevTime=0
 
+    self.ogSpeed=self.maxTime
+    self.fastSpeed=self.maxTime/2
+
 end
 
 function lvl:rotateBoard(dir)
@@ -239,12 +244,13 @@ function lvl:rotateBoard(dir)
 end
 
 function lvl:update(dt)
+    timer.update(dt)
 
     self.disp.timer:update(dt)
 
-    if not self.frozen and not self.gameOver then
+    if not self.frozen and not self.gameOver and not self.pause.b then
         self.gTime=self.gTime+dt
-        timer.update(dt)
+        --timer.update(dt)
     
         self.particles.update(dt)
         self.bg:update(dt)
@@ -263,24 +269,13 @@ function lvl:update(dt)
 
         if input:pressed("fall") then
             --self.prevTime=self.maxTime
-            self.maxTime=self.maxTime*0.5
+            self.maxTime=self.fastSpeed
             print(self.maxTime)
         end
 
         if input:released("fall") then
-            self.maxTime=self.maxTime*2
+            self.maxTime=self.ogSpeed
             print(self.maxTime)
-        end
-
-        if input:pressed("pause") then
-            if self.score>data.hiScore then
-                data.hiScore=self.score
-                save()
-            end
-            self.frozen=true
-            self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
-                gs.switch(state["menu"])
-            end)
         end
 
         if self.patternRotate<0 then
@@ -303,8 +298,13 @@ function lvl:update(dt)
             if not checkBlockFall(self.map) then
                 if getBrickNumber(self.map) >= self.maxBlocks then
                     self.gameOver=true
-
-                    timer.tween(1,self.tray,{y=0},"out-elastic")
+                    if self.score>data.hiScore then
+                        data.hiScore=self.score
+                        save()
+                    end
+                    timer.after(0.5,function()
+                        timer.tween(0.8,self.tray,{y=0},"out-cubic")
+                    end)
                 end
             end
             
@@ -324,17 +324,37 @@ function lvl:update(dt)
         end
     end
 
-    if self.gameOver then
-        timer.update(dt)
+    if self.gameOver and not self.frozen and not self.pause.b then
+        --timer.update(dt)
         self.particles.update(dt)
         self.bg:update(dt)
+
+        if input:pressed("select") then
+            self.frozen=true
+            self.disp.timer:tween(0.5,self.disp,{h=0},"in-bounce",function()
+                gs.switch(state["menu"])
+            end)
+        end
+    end
+    
+    if input:pressed("pause") and not self.gameOver then
+        
+        if self.pause.b==true then
+            self.pause.b=false
+            timer.tween(0.5,self.pause,{y=-conf.gH},"out-cubic")
+        else
+            self.pause.b=true
+            --self.pause={b=false,x=conf.gW/2,y=-conf.gH/2}
+            timer.tween(0.5,self.pause,{y=0},"out-cubic")
+        end
     end
 end
 
-local function sprint(t,x,y,a,r)
+local function sprint(t,x,y,a,r,ox,oy)
+    local cr,cg,cb,ca=lg.getColor()
     lg.setColor(0,0,0,a)
-    cprint(t,x+1,y+1,r)
-    lg.setColor(1,1,1,1)
+    cprint(t,x+(ox or 1),y+(oy or 1),r)
+    lg.setColor(cr,cg,cb,ca)
     cprint(t,x,y,r)
 end
 
@@ -405,15 +425,48 @@ function lvl:draw()
         sprint(txt,1+font:getWidth(txt)/2,4)
 
         if self.gameOver then
+            lg.push()
+            lg.translate(0,self.tray.y)
+
             lg.setColor(0,0,0,0.5)
-                lg.rectangle("fill",18,0,conf.gW-30,conf.gH-14+self.tray.y)
+                lg.rectangle("fill",18,0,conf.gW-30,conf.gH-14)
             lg.setColor(color("#482a37"))
                 local w=16
-                rrect(w,-1,conf.gW-w*2,conf.gH-w+self.tray.y)
+                rrect(w,-1,conf.gW-w*2,conf.gH-w)
             lg.setColor(color("#9a5854"))
                 local w=20
-                rrect(w,-1,conf.gW-w*2,conf.gH-w+self.tray.y)
+                rrect(w,-1,conf.gW-w*2,conf.gH-w)
+            lg.setColor(1,1,1,1)
+                sprint("game over!",conf.gW/2,16,0.5)
+                sprint("hi score: "..data.hiScore,conf.gW/2,40,0.5)
+                if self.score>data.hiScore then
+                    lg.setColor(color("#e4a47fff"))
+                    sprint("new hi score!",conf.gW/2,62,0)
+                end
+                sprint("press z/space",conf.gW/2,100,0.5)
+
+            lg.translate(0,0)
+            lg.pop()
         end
+        --elseif self.pause.b then
+            lg.push()
+            lg.translate(0,self.pause.y)
+
+            lg.setColor(0,0,0,0.5)
+                lg.rectangle("fill",18,0,conf.gW-30,conf.gH-14)
+            lg.setColor(color("#482a37"))
+                local w=16
+                rrect(w,-1,conf.gW-w*2,conf.gH-w)
+            lg.setColor(color("#9a5854"))
+                local w=20
+                rrect(w,-1,conf.gW-w*2,conf.gH-w)
+            lg.setColor(1,1,1,1)
+                sprint("paused",conf.gW/2,16,0.5)
+                sprint("hi score: "..data.hiScore,conf.gW/2,40,0.5)
+            lg.translate(0,0)
+            lg.pop()
+        --end
+        lg.setColor(1,1,1,1)
     lg.setCanvas()
 
     shove.beginDraw()

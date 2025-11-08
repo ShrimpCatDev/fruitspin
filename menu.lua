@@ -169,7 +169,7 @@ local function sprint(t,x,y,a,r,ox,oy)
     cprint(t,x,y,r)
 end
 
-local text="hey there! thanks for playing my game! i hope you enjoy it. shoutout to razertg! you know whats funny about scrolling text like this? its that you can say pretty much whatever you want on these. such as youve been trolled or your mom. please dont ask why the heck i made this at the bottom, i just thought it would look cool. if you enjoyed this game please leave a comment on the itch.io page and rate it too! well... i dont know what else you say... just start the game already im getting impatient and i can only write so much!!! who cares im starting it over.   "
+local text="hey there! thanks for playing my game! i hope you enjoy it. shoutout to razertg and hackclub! you know whats funny about scrolling text like this? its that you can say pretty much whatever you want on these. such as youve been trolled or your mom. please dont ask why the heck i made this at the bottom, i just thought it would look cool. if you enjoyed this game please leave a comment on the itch.io page and rate it too! well... i dont know what else you say... just start the game already im getting impatient and i can only write so much!!! who cares im starting it over.   "
 
 function menu:draw()
     lg.setCanvas(self.disp.img)
