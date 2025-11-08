@@ -50,6 +50,7 @@ function menu:refresh()
 end
 
 function menu:enter()
+    shove.addGlobalEffect(lutEffect)
     love.audio.stop()
     self.music.bg:play()
     timer.clear()

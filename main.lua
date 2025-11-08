@@ -52,21 +52,23 @@ function love.load()
 
     state={
         ["level"] = require("level"),
-        ["menu"] = require("menu")
+        ["menu"] = require("menu"),
+        ["intro"] = require("intro")
     }
     
     math.randomseed(love.math.random(0,845261654))
     rotate=require("lib.rotate")
 
-    local lutEffect=love.graphics.newShader("shaders/lut.glsl")
+    lutEffect=love.graphics.newShader("shaders/lut.glsl")
     pal=lg.newImage("assets/lut.png")
     pal:setFilter("nearest","nearest")
     lutEffect:send("lut",pal)
 
     shove.addGlobalEffect(lutEffect)
+    --shove.removeGlobalEffect(lutEffect)
     shove.createLayer("game")
 
-    gs.switch(state["menu"])
+    gs.switch(state["intro"])
 
     
 
