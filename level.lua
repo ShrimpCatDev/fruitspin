@@ -182,6 +182,10 @@ function lvl:addScore(s)
 end
 
 function lvl:enter()
+
+    self.gameOver=false
+    self.tray={x=0,y=-conf.gH}
+
     love.audio.stop()
     timer.clear()
     self.disp={img=lg.newCanvas(conf.gW,conf.gH),x=conf.gW/2,y=conf.gH/2,w=0,h=0,r=-2,timer=timer.new()}
@@ -238,7 +242,7 @@ function lvl:update(dt)
 
     self.disp.timer:update(dt)
 
-    if not self.frozen then
+    if not self.frozen and not self.gameOver then
         self.gTime=self.gTime+dt
         timer.update(dt)
     
@@ -292,12 +296,19 @@ function lvl:update(dt)
             if not checkBlockFall(self.map) then
                 rmvBlocks(self.map)
                 spawn=true
-                
             end
 
             fallBlocks(self.map)
 
-            if spawn then
+            if not checkBlockFall(self.map) then
+                if getBrickNumber(self.map) >= self.maxBlocks then
+                    self.gameOver=true
+
+                    timer.tween(1,self.tray,{y=0},"out-elastic")
+                end
+            end
+            
+            if spawn and not self.gameOver then
                 if not checkBlockFall(self.map) then
                     local x=math.random(1,10)
                     while self.map[1][x]~=0 do
@@ -308,9 +319,15 @@ function lvl:update(dt)
                     self.map[1][x]=self.nextFruit[2]
                 end
             end
-            
+
             self.time=0
         end
+    end
+
+    if self.gameOver then
+        timer.update(dt)
+        self.particles.update(dt)
+        self.bg:update(dt)
     end
 end
 
@@ -386,6 +403,17 @@ function lvl:draw()
 
         local txt=getBrickNumber(self.map).."/"..self.maxBlocks
         sprint(txt,1+font:getWidth(txt)/2,4)
+
+        if self.gameOver then
+            lg.setColor(0,0,0,0.5)
+                lg.rectangle("fill",18,0,conf.gW-30,conf.gH-14+self.tray.y)
+            lg.setColor(color("#482a37"))
+                local w=16
+                rrect(w,-1,conf.gW-w*2,conf.gH-w+self.tray.y)
+            lg.setColor(color("#9a5854"))
+                local w=20
+                rrect(w,-1,conf.gW-w*2,conf.gH-w+self.tray.y)
+        end
     lg.setCanvas()
 
     shove.beginDraw()
