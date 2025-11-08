@@ -508,12 +508,9 @@ function lvl:draw()
 
     shove.beginDraw()
         shove.beginLayer("game")
-
             local w=conf.gW/2
             local h=conf.gH/2
             lg.draw(self.disp.img,self.disp.x,self.disp.y,self.disp.r,self.disp.w,self.disp.h,w,h)
-
-            lg.print(self.maxTime,0,110)
         shove.endLayer()
     shove.endDraw()
 end
