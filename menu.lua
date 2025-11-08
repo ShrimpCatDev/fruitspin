@@ -212,9 +212,9 @@ function menu:draw()
         lg.draw(self.title.img,self.title.x,self.title.y,0,1,1,self.title.w/2,self.title.h/2)
 
         lg.setColor(0,0,0,0.5)
-        lg.print(text,conf.gW-(self.time*70)%(font:getWidth(text)+conf.gW)+1,conf.gH-8)
+        lg.print(text,conf.gW-(self.time*60)%(font:getWidth(text)+conf.gW)+1,conf.gH-8)
         lg.setColor(color("#fff3ee"))
-        lg.print(text,conf.gW-(self.time*70)%(font:getWidth(text)+conf.gW),conf.gH-9)
+        lg.print(text,conf.gW-(self.time*60)%(font:getWidth(text)+conf.gW),conf.gH-9)
 
         lg.setColor(1,1,1,1)
     lg.setCanvas()

@@ -24,6 +24,10 @@ function load()
 end
 
 function love.load()
+    love.window.setTitle("FruitSpin")
+
+    local icon=love.image.newImageData("assets/icon.png")
+    love.window.setIcon(icon)
 
     data={hiScore=0}
 
