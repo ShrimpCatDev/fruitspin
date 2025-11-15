@@ -1,2 +1,2 @@
-# Shrimp2D
- My personal love2d template!
+# Fruitspin
+fruitspin yes
